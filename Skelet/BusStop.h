@@ -14,7 +14,10 @@ using namespace std;
 
 class BusStop {
 public:
-    static void fillMap(string filename, vector<BusStop>& vec);
+    static void fillMap(string filename, vector<int>& vecID);
+    static void removeFromMap(const string &busStopID) {
+        BusStops.erase(stoi(busStopID));
+    }
 
     static void printMap();
 
@@ -29,6 +32,21 @@ public:
     }
     unsigned int getZone() const {
         return zone;
+    }
+
+    unordered_set<string> &getBusLines(){
+        return busLines;
+    }
+
+    static BusStop* getBusStop(int key) {
+        if(BusStops.find(key) == BusStops.end()) {
+            return nullptr;
+        }
+        return &BusStops.find(key)->second;
+    }
+
+    static void addBusStop(string input, string busNum) {
+        createBusStop(input, busNum);
     }
 
 private:

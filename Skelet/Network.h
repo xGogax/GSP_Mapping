@@ -18,6 +18,12 @@ public:
         this->lines.push_back(l);
     }
 
+    void addBusStop(string busNum, string dir, string input);
+    void removeBusStop(string busStopID);
+    void removeLine(string busNum);
+
+    void printBusStops(string busNum) const;
+
 private:
     vector<Line> lines;
 };

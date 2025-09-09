@@ -35,7 +35,7 @@ BusStop BusStop::createBusStop(string input, string busNum) {
     }
 }
 
-void BusStop::fillMap(string filename, vector<BusStop>& vec) {
+void BusStop::fillMap(string filename, vector<int>& vecID) {
     // --- izvuci busNum iz imena fajla ---
     size_t pos = filename.find('_');
     string busNum = (pos != string::npos) ? filename.substr(0, pos) : filename;
@@ -50,7 +50,12 @@ void BusStop::fillMap(string filename, vector<BusStop>& vec) {
     string line;
     while (getline(file, line)) {
         if (!line.empty()) {
-            vec.push_back(createBusStop(line, busNum));
+            createBusStop(line, busNum);
+            size_t pos = line.find('!');
+            if (pos != string::npos) {
+                string brojStr = line.substr(0, pos);
+                vecID.push_back(stoi(brojStr));
+            }
         }
     }
     file.close();

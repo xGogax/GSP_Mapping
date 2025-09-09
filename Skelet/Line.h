@@ -31,13 +31,24 @@ public:
         return Line(tokens[0], tokens[1], tokens[2]);
     }
 
-private:
-    Line(const string &busNum, const string &startPoint, const string &endPoint) :
-    busNum(busNum), startPoint(startPoint), endPoint(endPoint) {
-        Direction a(busNum + "_dirA.txt");
-        Direction b(busNum + "_dirB.txt");
+    Direction &getDirectionA() {
+        return a;
+    }
+    Direction &getDirectionB() {
+        return b;
     }
 
+    string getBusNum() const {
+        return busNum;
+    }
+
+private:
+    Line(const string &busNum, const string &startPoint, const string &endPoint) :
+    a(busNum + "_dirA.txt", busNum), b(busNum + "_dirB.txt", busNum), busNum(busNum), startPoint(startPoint), endPoint(endPoint) {
+    }
+
+    Direction a;
+    Direction b;
     string busNum;
     string startPoint;
     string endPoint;
