@@ -25,52 +25,78 @@ public:
     };
 
     void apply(int number) {
-        auto printLines = [](const unordered_set<string>& lines) {
+        // Lambda za ispis trenutnog skupa linija
+        auto printLines = [this]() {
+            const vector<string>& target = filteredLines.empty() ? lines : filteredLines;
             cout << "Filtered lines: ";
-            for (const auto& line : lines) cout << line << " ";
+            for (const auto& line : target) cout << line << " ";
             cout << endl;
         };
 
-        if (number == 1) { // FILTER ZONA
-            cout << "Koje zone zelite (1 = {1}, 2 = {1,2}, 3 = {1,2,3}): ";
-            int x; cin >> x;
+        // Odredi nad kojim skupom radimo: filteredLines ako već postoji, inače lines
+        const vector<string>& currentLines = filteredLines.empty() ? lines : filteredLines;
 
-            vector<int> zones;
-            if (x == 1) zones = {1};
-            else if (x == 2) zones = {1,2};
-            else if (x == 3) zones = {1,2,3};
+        switch (number) {
+            case 1: { // FILTER ZONA
+                cout << "Koje zone zelite (1 = {1}, 2 = {1,2}, 3 = {1,2,3}): ";
+                int x; cin >> x;
 
-            ZoneFilter zf(zones);
-            auto filteredLines = zf.apply(busStops, lines);
-            printLines(filteredLines);
+                vector<int> zones;
+                if (x == 1) zones = {1};
+                else if (x == 2) zones = {1,2};
+                else if (x == 3) zones = {1,2,3};
 
-        } else if (number == 2) { // FILTER PO BROJU LINIJE
-            cout << "Izaberite opciju:\n1. Broj linije manji od X\n2. Broj linije veci od X\n3. Broj linije izmedju X i Y\n";
-            int option; cin >> option;
-
-            int x, y = 0;
-            if (option == 1 || option == 2) {
-                cout << "Unesite broj X: "; cin >> x;
-            } else {
-                cout << "Unesite broj X i Y: "; cin >> x >> y;
+                ZoneFilter zf(zones);
+                auto result = zf.apply(busStops, currentLines);
+                filteredLines.assign(result.begin(), result.end());
+                printLines();
+                break;
             }
 
-            NumberFilter nf(option, x, y);
-            auto filteredLines = nf.apply(lines);
-            printLines(filteredLines);
+            case 2: { // FILTER PO BROJU LINIJE
+                cout << "Izaberite opciju:\n1. Broj linije manji od X\n2. Broj linije veci od X\n3. Broj linije izmedju X i Y\n";
+                int option; cin >> option;
 
-        } else if (number == 3) { // FILTER PO BROJU STAJALISTA
-            cout << "Izaberite opciju:\n1. Manje od X\n2. Vece od X\n";
-            int option; cin >> option;
+                int x, y = 0;
+                if (option == 1 || option == 2) {
+                    cout << "Unesite broj X: "; cin >> x;
+                } else {
+                    cout << "Unesite broj X i Y: "; cin >> x >> y;
+                }
 
-            int x;
-            cout << "Unesite broj X: "; cin >> x;
+                NumberFilter nf(option, x, y);
+                auto result = nf.apply(currentLines);
+                filteredLines.assign(result.begin(), result.end());
+                printLines();
+                break;
+            }
 
-            StopCountFilter scf(option, x);
-            auto filteredLines = scf.apply(busStops, lines);
-            printLines(filteredLines);
+            case 3: { // FILTER PO BROJU STAJALISTA
+                cout << "Izaberite opciju:\n1. Manje od X\n2. Vece od X\n";
+                int option; cin >> option;
+
+                int x;
+                cout << "Unesite broj X: "; cin >> x;
+
+                StopCountFilter scf(option, x);
+                auto result = scf.apply(busStops, currentLines);
+                filteredLines.assign(result.begin(), result.end());
+                printLines();
+                break;
+            }
+
+            case 4: { // RESET FILTERA
+                filteredLines.clear();
+                cout << "Filteri su otkazani, sve linije su ponovo dostupne.\n";
+                break;
+            }
+
+            default:
+                cout << "Nepoznata opcija filtera.\n";
+                break;
         }
     }
+
 
 
     void printLines() const {
@@ -84,6 +110,7 @@ public:
 protected:
     unordered_map<int, BusStop> busStops;
     vector<string> lines;
+    vector<string> filteredLines;
 };
 
 #endif

@@ -29,7 +29,12 @@ int main() {
 
     Filter f;
     // f.printLines();
-    f.apply(3);
+    f.apply(1);
+    f.apply(2);
+
+    f.apply(4);
+
+    f.apply(2);
 
     //TODO izmenu podataka o liniji
     //TODO funkcionalnosti linije
