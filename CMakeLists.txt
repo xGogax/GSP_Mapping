@@ -13,4 +13,12 @@ add_executable(GSP_Project main.cpp
         Skelet/BusStop.cpp
         Skelet/BusStop.h
         Skelet/Location.cpp
-        Skelet/Location.h)
+        Skelet/Location.h
+        Filteri/Filter.h
+        Filteri/BuiltInFilters/ZoneFilter.cpp
+        Filteri/BuiltInFilters/ZoneFilter.h
+        Filteri/BuiltInFilters/NumberFilter.cpp
+        Filteri/BuiltInFilters/NumberFilter.h
+        Filteri/BuiltInFilters/StopCountFilter.cpp
+        Filteri/BuiltInFilters/StopCountFilter.h
+)

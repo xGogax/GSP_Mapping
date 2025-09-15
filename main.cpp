@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "Filteri/Filter.h"
 #include "Skelet/BusStop.h"
 #include "Skelet/Network.h"
 
@@ -21,15 +22,16 @@ int main() {
 
     file.close();
 
-    t.removeLine("7");
-    cout << "--------------------------------" << endl;
-    BusStop::printMap();
-    cout << "--------------------------------" << endl;
-    t.printBusStops("6");
+    // t.removeLine("7");
+    // cout << "--------------------------------" << endl;
+    // cout << "--------------------------------" << endl;
+    // t.printBusStops("6");
 
+    Filter f;
+    // f.printLines();
+    f.apply(3);
 
     //TODO izmenu podataka o liniji
-    //TODO dodati opciju filtriranja
     //TODO funkcionalnosti linije
     //TODO dodati L i C moduo generatora (Generator -> (L, C))
     

@@ -38,6 +38,10 @@ public:
         return busLines;
     }
 
+    static const unordered_map<int, BusStop>& getBusStops() {
+        return BusStops;
+    }
+
     static BusStop* getBusStop(int key) {
         if(BusStops.find(key) == BusStops.end()) {
             return nullptr;
@@ -49,6 +53,8 @@ public:
         createBusStop(input, busNum);
     }
 
+    const unordered_set<string>& getBusLines() const { return busLines; }
+
 private:
     BusStop(int idBusStop, const string &name, double lat, double lon, unsigned int zone)
     : idBusStop(idBusStop), name(name), location(lat, lon), zone(zone) {
@@ -57,6 +63,7 @@ private:
     };
 
     static BusStop createBusStop(string input, string busNum);
+
 
     int idBusStop;
     string name;
