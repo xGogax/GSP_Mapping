@@ -23,4 +23,9 @@ add_executable(GSP_Project main.cpp
         Filteri/BuiltInFilters/StopCountFilter.h
         Functionality.cpp
         Functionality.h
+        Generator/Generator.h
+        Generator/BuiltInGenerators/CGenerator.cpp
+        Generator/BuiltInGenerators/CGenerator.h
+        Generator/BuiltInGenerators/LGenerator.cpp
+        Generator/BuiltInGenerators/LGenerator.h
 )

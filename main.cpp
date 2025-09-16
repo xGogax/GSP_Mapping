@@ -2,6 +2,8 @@
 
 #include "Functionality.h"
 #include "Filteri/Filter.h"
+#include "Generator/BuiltInGenerators/CGenerator.h"
+#include "Generator/BuiltInGenerators/LGenerator.h"
 #include "Skelet/BusStop.h"
 #include "Skelet/Network.h"
 
@@ -43,8 +45,17 @@ int main() {
     // x.getMostCommonLines("309");
     // x.findNearestStop(44.75286442018129, 20.559372760000535, "303");
     // x.countCommonStops(30);
-    // x.getLinesForStop(99);
+    x.getLinesForStop(1429);
     // x.getNextStops(436);
+
+
+    // CGenerator cg;
+    // cg.build(BusStop::getBusStops());
+    // cg.print();
+
+    LGenerator lg(x);
+    lg.build(BusStop::getBusStops());
+    lg.print();
 
     //TODO izmenu podataka o liniji
     //TODO funkcionalnosti linije
