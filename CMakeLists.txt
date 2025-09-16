@@ -21,4 +21,6 @@ add_executable(GSP_Project main.cpp
         Filteri/BuiltInFilters/NumberFilter.h
         Filteri/BuiltInFilters/StopCountFilter.cpp
         Filteri/BuiltInFilters/StopCountFilter.h
+        Functionality.cpp
+        Functionality.h
 )

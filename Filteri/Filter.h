@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 #include "../Skelet/BusStop.h"
 #include "BuiltInFilters/ZoneFilter.h"
 #include "BuiltInFilters/NumberFilter.h"
@@ -22,10 +23,10 @@ public:
                 }
             }
         }
+        sortLines(lines);
     };
 
     void apply(int number) {
-        // Lambda za ispis trenutnog skupa linija
         auto printLines = [this]() {
             const vector<string>& target = filteredLines.empty() ? lines : filteredLines;
             cout << "Filtered lines: ";
@@ -33,7 +34,7 @@ public:
             cout << endl;
         };
 
-        // Odredi nad kojim skupom radimo: filteredLines ako već postoji, inače lines
+        vector<string>& targetLines = filteredLines.empty() ? filteredLines : filteredLines;
         const vector<string>& currentLines = filteredLines.empty() ? lines : filteredLines;
 
         switch (number) {
@@ -48,7 +49,7 @@ public:
 
                 ZoneFilter zf(zones);
                 auto result = zf.apply(busStops, currentLines);
-                filteredLines.assign(result.begin(), result.end());
+                assignFiltered(result);
                 printLines();
                 break;
             }
@@ -66,7 +67,7 @@ public:
 
                 NumberFilter nf(option, x, y);
                 auto result = nf.apply(currentLines);
-                filteredLines.assign(result.begin(), result.end());
+                assignFiltered(result);
                 printLines();
                 break;
             }
@@ -80,7 +81,7 @@ public:
 
                 StopCountFilter scf(option, x);
                 auto result = scf.apply(busStops, currentLines);
-                filteredLines.assign(result.begin(), result.end());
+                assignFiltered(result);
                 printLines();
                 break;
             }
@@ -97,8 +98,6 @@ public:
         }
     }
 
-
-
     void printLines() const {
         cout << "Lines: ";
         for (const auto& line : lines) {
@@ -111,6 +110,25 @@ protected:
     unordered_map<int, BusStop> busStops;
     vector<string> lines;
     vector<string> filteredLines;
+
+private:
+    // sortiranje linija numericki + sufiks (npr. 25 < 25P)
+    static void sortLines(vector<string>& v) {
+        sort(v.begin(), v.end(), [](const string& a, const string& b) {
+            int numA = 0, numB = 0;
+            size_t i = 0;
+            while (i < a.size() && isdigit(a[i])) { numA = numA * 10 + (a[i] - '0'); ++i; }
+            i = 0;
+            while (i < b.size() && isdigit(b[i])) { numB = numB * 10 + (b[i] - '0'); ++i; }
+            if (numA != numB) return numA < numB;
+            return a < b; // ako su brojevi isti, leksikografski sort
+        });
+    }
+
+    void assignFiltered(const unordered_set<string>& result) {
+        filteredLines.assign(result.begin(), result.end());
+        sortLines(filteredLines);
+    }
 };
 
 #endif

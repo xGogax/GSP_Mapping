@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "Functionality.h"
 #include "Filteri/Filter.h"
 #include "Skelet/BusStop.h"
 #include "Skelet/Network.h"
@@ -27,14 +28,23 @@ int main() {
     // cout << "--------------------------------" << endl;
     // t.printBusStops("6");
 
-    Filter f;
-    // f.printLines();
-    f.apply(1);
-    f.apply(2);
+    // Filter f;
+    // // f.printLines();
+    // f.apply(1);
+    // f.apply(2);
+    //
+    // f.apply(4);
+    //
+    // f.apply(2);
 
-    f.apply(4);
-
-    f.apply(2);
+    Functionality x;
+    // x.getCommonLines("309");
+    // x.passesThroughInSameDirection("309", 104, 1439);
+    // x.getMostCommonLines("309");
+    // x.findNearestStop(44.75286442018129, 20.559372760000535, "303");
+    // x.countCommonStops(30);
+    // x.getLinesForStop(99);
+    // x.getNextStops(436);
 
     //TODO izmenu podataka o liniji
     //TODO funkcionalnosti linije
