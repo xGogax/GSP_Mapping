@@ -30,7 +30,7 @@ void CGenerator::print() const {
 void CGenerator::exportGraph(const string& filename) const {
     ofstream out("output/" + filename);
     if (!out.is_open()) {
-        cerr << "Ne mogu da otvorim fajl za pisanje: " << filename << endl;
+        cerr << "Cant open file for writing: " << filename << endl;
         return;
     }
 
@@ -71,5 +71,5 @@ void CGenerator::exportGraph(const string& filename) const {
     }
 
     out.close();
-    cout << "Graf je exportovan u fajl: output/" << filename << endl;
+    cout << "Graf is exported into file: output/" << filename << endl;
 }

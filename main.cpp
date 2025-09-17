@@ -2,6 +2,8 @@
 #include <iostream>
 
 #include "Functionality.h"
+#include "Exception/BuiltInExceptions/FileCantBeOpenException.h"
+#include "Exception/BuiltInExceptions/InvalidInputFormatException.h"
 #include "Filteri/Filter.h"
 #include "Generator/BuiltInGenerators/CGenerator.h"
 #include "Generator/BuiltInGenerators/LGenerator.h"
@@ -16,7 +18,7 @@ int checker = 0;
 void option1(Network& t) {
     ifstream file("data/_lines.txt");
     if (!file.is_open()) {
-        cerr << "Greska: fajl se ne moze otvoriti!" << endl;
+        throw FileCantBeOpenException();
         return;
     }
 
@@ -57,10 +59,15 @@ int main() {
                 option1(network);
                 break;
             case 2: {
-                cout << "Add line in next format: \"number!start!end\"";
+                cout << "Add line in next format: \"number!start!end\"" << endl;
                 string addLineLine;
                 cin >> addLineLine;
-                network.addLine(addLineLine);
+                try {
+                    network.addLine(addLineLine);
+                } catch (Exception &e) {
+                    cout << e.what() << endl;
+                }
+
                 break;
             }
             case 3: {
@@ -80,7 +87,11 @@ int main() {
                 cout << "Add station information in format stationID!Name!lon!lat!zone" << endl;
                 string addStationInput;
                 cin >> addStationInput;
-                network.addBusStop(addStationID, addStationDirection, addStationInput);
+                try {
+                    network.addBusStop(addStationID, addStationDirection, addStationInput);
+                } catch (Exception &e) {
+                    cout << e.what() << endl;
+                }
                 break;
             }
             case 5: {
@@ -153,7 +164,11 @@ int main() {
                 Functionality functionality;
                 string searchStationID;
                 cin >> searchStationID;
-                functionality.searchStation(searchStationID);
+                try {
+                    functionality.searchStation(searchStationID);
+                } catch (Exception &e) {
+                    cout << e.what() << endl;
+                }
                 break;
             }
             case 10: {

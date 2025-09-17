@@ -39,7 +39,7 @@ public:
 
         switch (number) {
             case 1: { // FILTER ZONA
-                cout << "Koje zone zelite (1 = {1}, 2 = {1,2}, 3 = {1,2,3}): ";
+                cout << "What zone do you want? (1 = {1}, 2 = {1,2}, 3 = {1,2,3}): ";
                 int x; cin >> x;
 
                 vector<int> zones;
@@ -55,14 +55,14 @@ public:
             }
 
             case 2: { // FILTER PO BROJU LINIJE
-                cout << "Izaberite opciju:\n1. Broj linije manji od X\n2. Broj linije veci od X\n3. Broj linije izmedju X i Y\n";
+                cout << "Select option:\n1. Line number less than X\n2. Line number greater than X\n3. Line number in between X i Y\n";
                 int option; cin >> option;
 
                 int x, y = 0;
                 if (option == 1 || option == 2) {
-                    cout << "Unesite broj X: "; cin >> x;
+                    cout << "Insert number X: "; cin >> x;
                 } else {
-                    cout << "Unesite broj X i Y: "; cin >> x >> y;
+                    cout << "Insert number X and Y: "; cin >> x >> y;
                 }
 
                 NumberFilter nf(option, x, y);
@@ -73,11 +73,11 @@ public:
             }
 
             case 3: { // FILTER PO BROJU STAJALISTA
-                cout << "Izaberite opciju:\n1. Manje od X\n2. Vece od X\n";
+                cout << "Select option:\n1. Less than X\n2. Greater than X\n";
                 int option; cin >> option;
 
                 int x;
-                cout << "Unesite broj X: "; cin >> x;
+                cout << "Insert number X: "; cin >> x;
 
                 StopCountFilter scf(option, x);
                 auto result = scf.apply(busStops, currentLines);
@@ -88,12 +88,12 @@ public:
 
             case 4: { // RESET FILTERA
                 filteredLines.clear();
-                cout << "Filteri su otkazani, sve linije su ponovo dostupne.\n";
+                cout << "Filters are canceled, all lines are available again.\n";
                 break;
             }
 
             default:
-                cout << "Nepoznata opcija filtera.\n";
+                cout << "Unknown filter option.\n";
                 break;
         }
     }

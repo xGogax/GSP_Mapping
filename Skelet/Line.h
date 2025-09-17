@@ -6,6 +6,7 @@
 #include <regex>
 #include <vector>
 
+#include "../Exception/BuiltInExceptions/InvalidInputFormatException.h"
 #include "Direction.h"
 
 using namespace std;
@@ -25,7 +26,7 @@ public:
         }
 
         if (tokens.size() < 3) {
-            cout << "ERROR: NOT VALID FORMAT" << endl;
+            throw InvalidInputFormatException(input);
         }
 
         return Line(tokens[0], tokens[1], tokens[2]);

@@ -1,5 +1,8 @@
 #include "Functionality.h"
 
+#include "Exception/BuiltInExceptions/FileCantBeOpenException.h"
+#include "Exception/BuiltInExceptions/StationNotExists.h"
+
 unordered_set<string> Functionality::getCommonLines(const string &line) const {
     unordered_set<string> result;
 
@@ -15,8 +18,8 @@ unordered_set<string> Functionality::getCommonLines(const string &line) const {
         }
     }
 
-    // Konačan ispis
-    cout << "Linije koje dele stajalista sa linijom " << line << ": ";
+    //ispis
+    cout << "Lines that divide a stop with a line " << line << ": ";
     for (const auto& l : result) {
         cout << l << " ";
     }
@@ -56,12 +59,12 @@ vector<string> Functionality::getMostCommonLines(const string &line) const {
     }
 
     // Ispis
-    cout << "Linija " << line << " ima najvise zajednickih stajalista sa: ";
+    cout << "Line " << line << " has most common lines with: ";
     for (size_t i = 0; i < result.size(); i++) {
         cout << result[i];
         if (i < result.size() - 1) cout << ", ";
     }
-    cout << " (" << maxCount << " zajednickih)" << endl;
+    cout << " (" << maxCount << " common)" << endl;
 
     return result;
 }
@@ -101,10 +104,10 @@ pair<int, string> Functionality::findNearestStop(double lat, double lon, const s
     }
 
     if (nearestID != -1) {
-        cout << "Najblize stajaliste: " << nearestID << " (" << nearestName << ")"
-                << " na rastojanju " << minDist << endl;
+        cout << "Closest station: " << nearestID << " (" << nearestName << ")"
+                << ", distance: " << minDist << endl;
     } else {
-        cout << "Nema stajalista za zadatu liniju." << endl;
+        cout << "There are no stations on inserted line." << endl;
     }
 
     return {nearestID, nearestName};
@@ -138,8 +141,8 @@ void Functionality::countCommonStops(int minCommon) const {
 
             // 4. Filtriramo po minCommon
             if (commonCount >= minCommon) {
-                cout << "Par linija: " << line1 << " i " << line2
-                        << " -> zajednickih stajalista: " << commonCount << endl;
+                cout << "Line pair: " << line1 << " i " << line2
+                        << " -> Common stations: " << commonCount << endl;
             }
         }
     }
@@ -161,7 +164,7 @@ vector<string> Functionality::getLinesForStop(int stopID, bool print) const {
     sort(result.begin(), result.end());
 
     if (print) {
-        cout << "Stajaliste " << stopID << " ima linije: ";
+        cout << "Station " << stopID << " has lines: ";
         for (size_t i = 0; i < result.size(); i++) {
             cout << result[i];
             if (i < result.size() - 1) cout << ", ";
@@ -200,7 +203,7 @@ vector<pair<int,string>> Functionality::getNextStops(int stopID, bool print) con
                 else continue; // poslednji u ovom fajlu -> preskoci za sada
 
                 if (added.find(nextID) == added.end()) {
-                    string nextName = busStops.count(nextID) ? busStops.at(nextID).getName() : "Nepoznat naziv";
+                    string nextName = busStops.count(nextID) ? busStops.at(nextID).getName() : "Unknown name";
                     result.push_back({nextID, nextName});
                     added.insert(nextID);
                 }
@@ -209,7 +212,7 @@ vector<pair<int,string>> Functionality::getNextStops(int stopID, bool print) con
     }
 
     if (print) {
-        cout << "Iz stajalista " << stopID << " moze se stici do sledecih stajalista uz jednu voznju:" << endl;
+        cout << "From station " << stopID << " the following stops can be reached with one ride:" << endl;
         for (const auto& s : result) {
             cout << s.first << " (" << s.second << ")" << endl;
         }
@@ -225,10 +228,10 @@ int Functionality::minTransfers(int a, int b) const {
 
     unordered_set<string> endSet(endLines.begin(), endLines.end());
 
-    // odmah resenje ako postoji zajednička linija
+    // odmah resenje ako postoji zajednicka linija
     for (const auto& l : startLines) {
         if (endSet.count(l)) {
-            cout << "Direktno autobusom " << l << "\n";
+            cout << "Direct with bus " << l << "\n";
             return 0;
         }
     }
@@ -247,12 +250,12 @@ int Functionality::minTransfers(int a, int b) const {
 
     // BFS
     unordered_map<string,int> dist;
-    unordered_map<string,string> parent;  // pamti roditelja linije
+    unordered_map<string,string> parent;
     queue<string> q;
 
     for (const auto& l : startLines) {
         dist[l] = 0;
-        parent[l] = ""; // koren nema roditelja
+        parent[l] = "";
         q.push(l);
     }
 
@@ -275,9 +278,8 @@ int Functionality::minTransfers(int a, int b) const {
         }
     }
 
-    if (found == "") return -1; // nema veze
+    if (found == "") return -1;
 
-    // rekonstrukcija puta
     vector<string> path;
     for (string cur = found; cur != ""; cur = parent[cur]) {
         path.push_back(cur);
@@ -309,9 +311,8 @@ int Functionality::shortestStops(int a, int b) const {
     while (!q.empty()) {
         int u = q.front(); q.pop();
 
-        if (u == b) break; // stigli smo
+        if (u == b) break;
 
-        // svi sledeći susedi preko linija
         auto nextStops = getNextStops(u, false);
         for (const auto& [v, _] : nextStops) {
             if (!dist.count(v)) {
@@ -331,7 +332,7 @@ int Functionality::shortestStops(int a, int b) const {
     }
     reverse(path.begin(), path.end());
 
-    cout << "Najkraci put (" << dist[b] << " stajalista): ";
+    cout << "Shortest path (" << dist[b] << " stations): ";
     for (size_t i = 0; i < path.size(); i++) {
         cout << path[i];
         if (i + 1 < path.size()) cout << " -> ";
@@ -345,14 +346,12 @@ void Functionality::searchStation(const string &stationID) const {
     int id;
     try { id = stoi(stationID); }
     catch (...) {
-        std::cout << "Nevalidan ID stanice." << std::endl;
-        return;
+        throw StationNotExists(stationID);
     }
 
     auto it = BusStop::getBusStops().find(id);
     if (it == BusStop::getBusStops().end()) {
-        std::cout << "Stanica " << stationID << " ne postoji u mapi." << std::endl;
-        return;
+        throw StationNotExists(stationID);
     }
 
     const BusStop& stop = it->second;
@@ -366,7 +365,7 @@ void Functionality::searchStation(const string &stationID) const {
 bool Functionality::passesThroughInSameDirection(const string &line, int stop1, int stop2) const {
     // 1. Proveri da li linija postoji u mapi
     if (find(lines.begin(), lines.end(), line) == lines.end()) {
-        cout << "Linija " << line << " ne postoji u mapi." << endl;
+        cout << "Line " << line << " does not exist in BusStops." << endl;
         return false;
     }
 
@@ -374,7 +373,7 @@ bool Functionality::passesThroughInSameDirection(const string &line, int stop1, 
     auto checkFile = [&](const string& path) -> bool {
         ifstream in(path);
         if (!in.is_open()) {
-            cout << "Ne mogu da otvorim fajl: " << path << endl;
+            throw FileCantBeOpenException();
             return false;
         }
 
@@ -398,20 +397,20 @@ bool Functionality::passesThroughInSameDirection(const string &line, int stop1, 
     // 2. Proveri dirA
     string pathA = "data/" + line + "_dirA.txt";
     if (checkFile(pathA)) {
-        cout << "Linija " << line << " prolazi kroz stajalista "
-                << stop1 << " i " << stop2 << " u smeru dirA." << endl;
+        cout << "Line " << line << " goes through stations "
+                << stop1 << " i " << stop2 << " in direction dirA" << endl;
         return true;
     }
 
     // 3. Ako ne, proveri dirB
     string pathB = "data/" + line + "_dirB.txt";
     if (checkFile(pathB)) {
-        cout << "Linija " << line << " prolazi kroz stajalista "
-                << stop1 << " i " << stop2 << " u smeru dirB." << endl;
+        cout << "Line " << line << " goes through stations "
+                << stop1 << " i " << stop2 << " in direction dirB." << endl;
         return true;
     }
 
     // 4. Ni u jednom smeru
-    cout << "Linija " << line << " ne prolazi kroz oba stajalista u istom smeru." << endl;
+    cout << "Line " << line << " does not go through this stations in same direction" << endl;
     return false;
 }

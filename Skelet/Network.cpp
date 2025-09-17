@@ -1,4 +1,6 @@
 #include "Network.h"
+#include "../Exception/BuiltInExceptions/WrongDirectionException.h"
+#include "../Exception/BuiltInExceptions/LineNotExists.h"
 
 void Network::addBusStop(string busNum, string dir, string input) {
     for (auto &line:lines) {
@@ -12,11 +14,11 @@ void Network::addBusStop(string busNum, string dir, string input) {
                 BusStop::addBusStop(input, busNum);
                 return;
             } else {
-                cout << "ERROR: Wrong direction" << endl;
+                throw WrongDirectionException();
             }
         }
     }
-    cout << "ERROR: Ne postoji zadata linija" << endl;
+    throw LineNotExists(busNum);
 }
 
 void Network::removeBusStop(string busStopID) {
@@ -58,7 +60,7 @@ void Network::printBusStops(string busNum) const {
                 cout << sigma.getIdBusStop() << " ";
                 cout << sigma.getName() << endl;
             }
-            cout << "//////////////////////////" << endl;
+            cout << R"(/\/\/\/\/\/\/\/\/\/\/\/\/\)" << endl;
             for (auto sigma:line.getDirectionB().getBusStops()) {
                 cout << sigma.getIdBusStop() << " ";
                 cout << sigma.getName() << endl;

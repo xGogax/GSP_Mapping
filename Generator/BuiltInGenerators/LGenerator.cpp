@@ -16,7 +16,7 @@ void LGenerator::build(const unordered_map<int, BusStop>& busStops) {
 
 void LGenerator::print() const {
     for (const auto& [stop, neighbors] : LGraph) {
-        cout << "Stajaliste " << stop << " je povezano sa: ";
+        cout << "Station " << stop << " is connected with: ";
         for (int n : neighbors) {
             cout << n << " ";
         }
@@ -27,7 +27,7 @@ void LGenerator::print() const {
 void LGenerator::exportGraph(const string &filename) const {
     ofstream out("output/" + filename);
     if (!out.is_open()) {
-        cerr << "Ne mogu da otvorim fajl za pisanje: " << filename << endl;
+        cerr << "Cant open file for writing: " << filename << endl;
         return;
     }
 
@@ -65,5 +65,5 @@ void LGenerator::exportGraph(const string &filename) const {
     }
 
     out.close();
-    cout << "Graf je exportovan u fajl: output/" << filename << endl;
+    cout << "Graf is exported into file: output/" << filename << endl;
 }

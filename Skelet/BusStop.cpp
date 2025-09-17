@@ -1,5 +1,7 @@
 #include "BusStop.h"
 
+#include "../Exception/BuiltInExceptions/InvalidInputFormatException.h"
+
 unordered_map<int, BusStop> BusStop::BusStops = unordered_map<int, BusStop>();
 
 BusStop BusStop::createBusStop(string input, string busNum) {
@@ -15,7 +17,7 @@ BusStop BusStop::createBusStop(string input, string busNum) {
     }
 
     if (tokens.size() < 5) {
-        cout << "ERROR: NOT VALID FORMAT" << endl;
+        throw InvalidInputFormatException(input);
     }
 
     //ukoliko ne nadje (valid)

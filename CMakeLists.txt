@@ -28,4 +28,10 @@ add_executable(GSP_Project main.cpp
         Generator/BuiltInGenerators/CGenerator.h
         Generator/BuiltInGenerators/LGenerator.cpp
         Generator/BuiltInGenerators/LGenerator.h
+        Exception/Exception.h
+        Exception/BuiltInExceptions/FileCantBeOpenException.h
+        Exception/BuiltInExceptions/InvalidInputFormatException.h
+        Exception/BuiltInExceptions/WrongDirectionException.h
+        Exception/BuiltInExceptions/LineNotExists.h
+        Exception/BuiltInExceptions/StationNotExists.h
 )
