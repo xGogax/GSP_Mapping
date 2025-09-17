@@ -22,6 +22,8 @@ public:
     void removeBusStop(string busStopID);
     void removeLine(string busNum);
 
+    void updateLine(string oldBusNum, string newBusNum);
+
     void printBusStops(string busNum) const;
 
 private:

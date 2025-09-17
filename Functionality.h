@@ -44,7 +44,7 @@ private:
             i = 0;
             while (i < b.size() && isdigit(b[i])) { numB = numB * 10 + (b[i] - '0'); ++i; }
             if (numA != numB) return numA < numB;
-            return a < b; // ako su brojevi isti, leksikografski sort
+            return a < b;
         });
     }
 };

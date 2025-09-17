@@ -42,6 +42,10 @@ public:
         return busNum;
     }
 
+    void setBusNum(string busNum) {
+        this->busNum = busNum;
+    }
+
 private:
     Line(const string &busNum, const string &startPoint, const string &endPoint) :
     a(busNum + "_dirA.txt", busNum), b(busNum + "_dirB.txt", busNum), busNum(busNum), startPoint(startPoint), endPoint(endPoint) {

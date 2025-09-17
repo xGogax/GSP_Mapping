@@ -33,6 +33,24 @@ void Network::removeLine(string busNum) {
     }
 }
 
+void Network::updateLine(string oldBusNum, string newBusNum) {
+    for (auto &line : lines) {
+        if (line.getBusNum() == newBusNum) {
+            cout << "ERROR: Bus already exists" << endl;
+            return;
+        }
+    }
+
+    for (auto &line : lines) {
+        if (line.getBusNum() == oldBusNum) {
+            line.setBusNum(newBusNum);
+            break;
+        }
+    }
+
+    BusStop::changeBusLines(oldBusNum, newBusNum);
+}
+
 void Network::printBusStops(string busNum) const {
     for (auto line:lines) {
         if (line.getBusNum() == busNum) {

@@ -128,6 +128,13 @@ int main() {
                 break;
             }
             case 7: {
+                cout << "Insert oldBusNum" << endl;
+                string oldBusNum;
+                cin >> oldBusNum;
+                cout << "Insert newBusNum" << endl;
+                string newBusNum;
+                cin >> newBusNum;
+                network.updateLine(oldBusNum, newBusNum);
                 break;
             }
             case 8: {

@@ -61,6 +61,19 @@ public:
         BusStops.find(id)->second.location = location;
     }
 
+    static void changeBusLines(string oldBusID, string newBusID) {
+        for (auto &busStopPair : BusStops) {
+            auto &busLines = busStopPair.second.busLines;
+
+            auto it = busLines.find(oldBusID);
+            if (it != busLines.end()) {
+                busLines.erase(it);
+                busLines.insert(newBusID);
+            }
+        }
+    }
+
+
     static void addBusStop(string input, string busNum) {
         createBusStop(input, busNum);
     }
