@@ -49,6 +49,10 @@ public:
         return &BusStops.find(key)->second;
     }
 
+    static void changeBusStop(int id, string naziv) {
+        BusStops.find(id)->second.name = naziv;
+    }
+
     static void addBusStop(string input, string busNum) {
         createBusStop(input, busNum);
     }

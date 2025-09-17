@@ -27,6 +27,10 @@ public:
     void countCommonStops(int minCommon) const;
     vector<string> getLinesForStop(int stopID, bool print = true) const;
     vector<pair<int,string>> getNextStops(int stopID, bool print = true) const;
+    int minTransfers(int a, int b) const;
+    int shortestStops(int a, int b) const;
+
+    void searchStation(const string& stationID) const;
 
 private:
     unordered_map<int, BusStop> busStops;

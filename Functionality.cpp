@@ -218,6 +218,151 @@ vector<pair<int,string>> Functionality::getNextStops(int stopID, bool print) con
     return result;
 }
 
+int Functionality::minTransfers(int a, int b) const {
+    // uzimamo linije sa startne i krajnje stanice
+    vector<string> startLines = getLinesForStop(a, false);
+    vector<string> endLines   = getLinesForStop(b, false);
+
+    unordered_set<string> endSet(endLines.begin(), endLines.end());
+
+    // odmah resenje ako postoji zajednička linija
+    for (const auto& l : startLines) {
+        if (endSet.count(l)) {
+            cout << "Direktno autobusom " << l << "\n";
+            return 0;
+        }
+    }
+
+    // graf linija: povezujemo sve linije koje dele stajaliste
+    unordered_map<string, unordered_set<string>> lineGraph;
+    for (const auto& [stopID, stop] : busStops) {
+        const auto& lines = stop.getBusLines();
+        for (auto it1 = lines.begin(); it1 != lines.end(); ++it1) {
+            for (auto it2 = next(it1); it2 != lines.end(); ++it2) {
+                lineGraph[*it1].insert(*it2);
+                lineGraph[*it2].insert(*it1);
+            }
+        }
+    }
+
+    // BFS
+    unordered_map<string,int> dist;
+    unordered_map<string,string> parent;  // pamti roditelja linije
+    queue<string> q;
+
+    for (const auto& l : startLines) {
+        dist[l] = 0;
+        parent[l] = ""; // koren nema roditelja
+        q.push(l);
+    }
+
+    string found = "";
+    while (!q.empty()) {
+        string u = q.front(); q.pop();
+        int d = dist[u];
+
+        if (endSet.count(u)) {
+            found = u;
+            break;
+        }
+
+        for (const auto& v : lineGraph[u]) {
+            if (!dist.count(v)) {
+                dist[v] = d + 1;
+                parent[v] = u;
+                q.push(v);
+            }
+        }
+    }
+
+    if (found == "") return -1; // nema veze
+
+    // rekonstrukcija puta
+    vector<string> path;
+    for (string cur = found; cur != ""; cur = parent[cur]) {
+        path.push_back(cur);
+    }
+    reverse(path.begin(), path.end());
+
+    // ispis
+    cout << "Putanja: ";
+    for (size_t i = 0; i < path.size(); i++) {
+        cout << path[i];
+        if (i + 1 < path.size()) cout << " -> ";
+    }
+    cout << "\n";
+
+    return dist[found];
+}
+
+int Functionality::shortestStops(int a, int b) const {
+    if (a == b) return 0;
+
+    unordered_map<int,int> dist;
+    unordered_map<int,int> parent;
+    queue<int> q;
+
+    dist[a] = 0;
+    parent[a] = -1;
+    q.push(a);
+
+    while (!q.empty()) {
+        int u = q.front(); q.pop();
+
+        if (u == b) break; // stigli smo
+
+        // svi sledeći susedi preko linija
+        auto nextStops = getNextStops(u, false);
+        for (const auto& [v, _] : nextStops) {
+            if (!dist.count(v)) {
+                dist[v] = dist[u] + 1;
+                parent[v] = u;
+                q.push(v);
+            }
+        }
+    }
+
+    if (!dist.count(b)) return -1; // nema puta
+
+    // rekonstrukcija puta
+    vector<int> path;
+    for (int cur = b; cur != -1; cur = parent[cur]) {
+        path.push_back(cur);
+    }
+    reverse(path.begin(), path.end());
+
+    cout << "Najkraci put (" << dist[b] << " stajalista): ";
+    for (size_t i = 0; i < path.size(); i++) {
+        cout << path[i];
+        if (i + 1 < path.size()) cout << " -> ";
+    }
+    cout << "\n";
+
+    return dist[b];
+}
+
+void Functionality::searchStation(const string &stationID) const {
+    int id;
+    try { id = stoi(stationID); }
+    catch (...) {
+        std::cout << "Nevalidan ID stanice." << std::endl;
+        return;
+    }
+
+    auto it = BusStop::getBusStops().find(id);
+    if (it == BusStop::getBusStops().end()) {
+        std::cout << "Stanica " << stationID << " ne postoji u mapi." << std::endl;
+        return;
+    }
+
+    const BusStop& stop = it->second;
+    std::cout << "Stanica " << stop.getIdBusStop()
+            << " - " << stop.getName()
+            << " (Lon: " << stop.getLocation().getLon()
+            << ", Lat: " << stop.getLocation().getLat()
+            << ", Zona: " << stop.getZone() << ")" << std::endl;
+}
+
 bool Functionality::passesThroughInSameDirection(const string &line, int stop1, int stop2) const {
     // 1. Proveri da li linija postoji u mapi
     if (find(lines.begin(), lines.end(), line) == lines.end()) {
