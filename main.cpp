@@ -87,13 +87,44 @@ int main() {
                 break;
             }
             case 6: {
-                cout << "Insert StationID" << endl;
-                int stationID;
-                cin >> stationID;
-                cout << "Insert new station name" << endl;
-                string stationName;
-                cin >> stationName;
-                BusStop::changeBusStop(stationID, stationName);
+                cout << "--- UPDATE ---" << endl;
+                cout << "1. Update Name" << endl;
+                cout << "2. Update Zone" << endl;
+                cout << "3. Update Location" << endl;
+
+                int sigma;
+                cin >> sigma;
+                if (sigma == 1) {
+                    cout << "Insert StationID" << endl;
+                    int stationID;
+                    cin >> stationID;
+                    cout << "Insert new station name" << endl;
+                    string stationName;
+                    cin >> stationName;
+                    BusStop::changeBusStopName(stationID, stationName);
+                } else if(sigma == 2) {
+                    cout << "Insert StationID" << endl;
+                    int stationID;
+                    cin >> stationID;
+                    cout << "Insert new station zone" << endl;
+                    int stationZone;
+                    cin >> stationZone;
+                    BusStop::changeBusStopZone(stationID, stationZone);
+                } else if (sigma == 3) {
+                    cout << "Insert StationID" << endl;
+                    int stationID;
+                    cin >> stationID;
+                    cout << "Insert lat" << endl;
+                    double lat;
+                    cin >> lat;
+                    cout << "Insert lon" << endl;
+                    double lon;
+                    cin >> lon;
+                    Location location(lat, lon);
+                    BusStop::changeBusStopLocation(stationID, location);
+                } else {
+                    cout << "Invalid input" << endl;
+                }
                 break;
             }
             case 7: {

@@ -49,8 +49,16 @@ public:
         return &BusStops.find(key)->second;
     }
 
-    static void changeBusStop(int id, string naziv) {
+    static void changeBusStopName(int id, const string& naziv) {
         BusStops.find(id)->second.name = naziv;
+    }
+
+    static void changeBusStopZone(int id, int zone) {
+        BusStops.find(id)->second.zone = zone;
+    }
+
+    static void changeBusStopLocation(int id, const Location& location) {
+        BusStops.find(id)->second.location = location;
     }
 
     static void addBusStop(string input, string busNum) {
