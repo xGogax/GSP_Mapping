@@ -1,3 +1,4 @@
+#include <format>
 #include <iostream>
 
 #include "Functionality.h"
@@ -6,8 +7,11 @@
 #include "Generator/BuiltInGenerators/LGenerator.h"
 #include "Skelet/BusStop.h"
 #include "Skelet/Network.h"
+#include "Generator/Generator.h"
 
 using namespace std;
+
+int checker = 0;
 
 void option1(Network& t) {
     ifstream file("data/_lines.txt");
@@ -310,29 +314,37 @@ int main() {
 
                 int pp;
                 cin >> pp;
+                Generator::Format format;
+                if (pp == 1) {
+                    format = Generator::Format::GML;
+                } else if (pp == 2) {
+                    format = Generator::Format::CSV;
+                }
 
-                if (p == 1 && pp == 1) {
-                    LGenerator lg(functionality, Generator::Format::GML);
+                if (p == 2) {
+                    LGenerator lg(functionality, format);
                     lg.build(BusStop::getBusStops());
                     lg.exportGraph("LGraph.gml");
-                } else if (p == 1 && pp == 2) {
-                    LGenerator lg(functionality, Generator::Format::CSV);
-                    lg.build(BusStop::getBusStops());
-                    lg.exportGraph("LGraph.csv");
-                } else if (p == 2 && pp == 1) {
-                    CGenerator cg(Generator::Format::GML);
+                } else if (p == 1) {
+                    CGenerator cg(format);
                     cg.build(BusStop::getBusStops());
                     cg.exportGraph("CGraph.gml");
-                } else if (p == 2 && pp == 2) {
-                    CGenerator cg(Generator::Format::CSV);
-                    cg.exportGraph("CGraph.csv");
-                    cg.build(BusStop::getBusStops());
                 }
+                checker = 1;
                 break;
             }
             case 14:
+                if (checker == 0) {
+                    cout << "Output file not generated, would you like to generate it?" << endl;
+                    cout << "1. yes" << endl;
+                    cout << "2. no" << endl;
+
+                    int kk;
+                    cin >> kk;
+
+                    if (kk == 1) break;
+                }
                 return 0;
-                break;
             default:
                 cout << "Invalid option." << endl << endl;
         }
